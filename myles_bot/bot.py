@@ -49,6 +49,8 @@ class MylesBot(object):
                              **kwargs)
 
     def send_photo(self, bot, update, photo, **kwargs):
+        bot.sendChatAction(update.message.chat_id, action="upload_photo")
+
         return bot.sendPhoto(update.message.chat_id, photo=photo, **kwargs)
 
     def send_photo_url(self, bot, update, url):
