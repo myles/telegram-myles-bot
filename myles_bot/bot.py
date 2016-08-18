@@ -108,7 +108,7 @@ class MylesBot(object):
         messages = [
             "Where you can find Myles on the Web:",
             "[mylesb.ca](https://mylesb.ca/?utm_source=telegram&utm_medium=bot"
-            "&utm_campaign=MylesBot) - Homepage",
+            "&utm_campaign=MylesBot) - *Homepage*",
             "[mylesbraithwaite.com](http://mylesbraithwaite.com/"
             "?utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot) - "
             "*Blog*",
@@ -117,9 +117,10 @@ class MylesBot(object):
             "*Myles' Programming Laboratory*",
             "[youaretheworst.today](https://youaretheworst.today/"
             "?utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot) - "
-            "*You Are the Worst Today*",
+            "*You Are the Worst Today* - A blog of things I find _the worst_.",
             "[myles.red](https://myles.red/?utm_source=telegram&utm_medium=bot"
-            "&utm_campaign=MylesBot) - *MylesRED*"
+            "&utm_campaign=MylesBot) - *MylesRED* - Sometimes I like to "
+            "publish mixtapes."
         ]
 
         self.send_messages(bot, update, messages)
