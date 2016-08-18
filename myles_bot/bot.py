@@ -1,3 +1,7 @@
+from StringIO import StringIO
+
+import requests
+
 from telegram.parsemode import ParseMode
 from telegram import ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -13,20 +17,29 @@ class MylesBot(object):
         self.telegram_api_key = config['telegram']
 
         self.keyboard = [[KeyboardButton('Who is Myles?'),
-                          KeyboardButton('Where is Myles?')]]
+                          KeyboardButton('Where is Myles?')],
+                         [KeyboardButton("What was Myles' last tweet?"),
+                          KeyboardButton("What was Myles' last photo?")]]
 
-    def send_message(self, bot, update, msg, disable_link_preview=True):
+    def send_message(self, bot, update, msg, disable_link_preview=True,
+                     **kwargs):
         return bot.sendMessage(update.message.chat_id, msg,
                                reply_markup=ReplyKeyboardMarkup(self.keyboard),
                                resize_keyboard=True,
                                parse_mode=ParseMode.MARKDOWN,
-                               disable_web_page_preview=disable_link_preview)
+                               disable_web_page_preview=disable_link_preview,
+                               **kwargs)
 
-    def send_location(self, bot, update, latitude, longitude):
+    def send_messages(self, bot, update, messages):
+        for msg in messages:
+            self.send_message(bot, update, msg)
+
+    def send_location(self, bot, update, latitude, longitude, **kwargs):
         reply_markup = ReplyKeyboardMarkup(self.keyboard)
         return bot.sendLocation(update.message.chat_id, latitude, longitude,
                                 reply_markup=reply_markup,
-                                resize_keyboard=True)
+                                resize_keyboard=True,
+                                **kwargs)
 
     def send_venue(self, bot, update, latitude, longitude, title, address,
                    **kwargs):
@@ -34,6 +47,13 @@ class MylesBot(object):
                              title, address, resize_keyboard=True,
                              reply_markup=ReplyKeyboardMarkup(self.keyboard),
                              **kwargs)
+
+    def send_photo(self, bot, update, photo, **kwargs):
+        return bot.sendPhoto(update.message.chat_id, photo=photo, **kwargs)
+
+    def send_photo_url(self, bot, update, url):
+        resp = requests.get(url)
+        return self.send_photo(bot, update, StringIO(resp.content))
 
     def command_who(self, bot, update):
         messages = [
@@ -48,8 +68,7 @@ class MylesBot(object):
             "(http://codepen.io/mylesb/)."
         ]
 
-        for msg in messages:
-            self.send_message(bot, update, msg)
+        self.send_messages(bot, update, messages)
 
     def command_where(self, bot, update):
         foursquare = ext.get_foursquare_location(self.config['foursquare'])
@@ -67,10 +86,31 @@ class MylesBot(object):
             self.send_location(bot, update, location['lat'], location['lng'])
 
     def command_tweet(self, bot, update):
-        pass
+        tweet = ext.get_last_tweet(self.config['twitter'])
+
+        for url in tweet['images']:
+            self.send_photo_url(bot, update, url)
+
+        messages = [
+            "```text\n{text}\n```",
+            "[@{user[screen_name]}](https://twitter.com/{user[screen_name]}) - {ago}"
+        ]
+
+        for msg in messages:
+            self.send_message(bot, update, msg.format(**tweet))
 
     def command_photo(self, bot, update):
         pass
+
+    def command_web(self, bot, update):
+        messages = [
+            "Where you can find Myles on the Web:",
+            "https://mylesb.ca/ - Homepage",
+            "https://mylesbraithwaite.com/ - Blog",
+            "https://mylesbraithwaite.org/ - Myles' Programming Laboratory"
+        ]
+
+        self.send_messages(bot, update, messages)
 
     def command_start(self, bot, update):
         msg = "Hi! I'm @MylesBot, a Telegram bot made by @MylesB about " \
@@ -84,11 +124,11 @@ class MylesBot(object):
             "`/who` - Who is Myles?",
             "`/where` - Where is Myles?",
             "`/tweet` - What was the last tweet Myles sent?",
-            "`/photo` - What was the last Instagram photo Myles took?"
+            "`/photo` - What was the last Instagram photo Myles took?",
+            "`/web` - Where can I find Myles on the interwebs?"
         ]
 
-        for msg in messages:
-            self.send_message(bot, update, msg)
+        self.send_messages(bot, update, messages)
 
     def noncommand_text(self, bot, update):
         text = update.message.text
@@ -98,6 +138,12 @@ class MylesBot(object):
 
         if text == 'Where is Myles?':
             self.command_where(bot, update)
+
+        if text == "What was Myles' last tweet?":
+            self.command_tweet(bot, update)
+
+        if text == "What was Myles' last photo?":
+            self.command_photo(bot, update)
 
     def run(self):
         updater = Updater(self.telegram_api_key)
@@ -112,6 +158,7 @@ class MylesBot(object):
 
         dp.add_handler(CommandHandler('tweet', self.command_tweet))
         dp.add_handler(CommandHandler('photo', self.command_photo))
+        dp.add_handler(CommandHandler('web', self.command_web))
 
         dp.add_handler(MessageHandler([Filters.text], self.noncommand_text))
 
