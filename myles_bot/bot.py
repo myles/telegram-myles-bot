@@ -107,9 +107,19 @@ class MylesBot(object):
     def command_web(self, bot, update):
         messages = [
             "Where you can find Myles on the Web:",
-            "https://mylesb.ca/ - Homepage",
-            "https://mylesbraithwaite.com/ - Blog",
-            "https://mylesbraithwaite.org/ - Myles' Programming Laboratory"
+            "[mylesb.ca](https://mylesb.ca/?utm_source=telegram&utm_medium=bot"
+            "&utm_campaign=MylesBot) - Homepage",
+            "[mylesbraithwaite.com](http://mylesbraithwaite.com/"
+            "?utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot) - "
+            "*Blog*",
+            "[mylesbraithwaite.org](https://mylesbraithwaite.org/"
+            "?utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot) - "
+            "*Myles' Programming Laboratory*",
+            "[youaretheworst.today](https://youaretheworst.today/"
+            "?utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot) - "
+            "*You Are the Worst Today*",
+            "[myles.red](https://myles.red/?utm_source=telegram&utm_medium=bot"
+            "&utm_campaign=MylesBot) - *MylesRED*"
         ]
 
         self.send_messages(bot, update, messages)
