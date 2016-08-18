@@ -100,7 +100,7 @@ class MylesBot(object):
             self.send_message(bot, update, msg.format(**tweet))
 
     def command_photo(self, bot, update):
-        pass
+        self.send_messages(bot, update, "Not implemented yet.")
 
     def command_web(self, bot, update):
         messages = [
