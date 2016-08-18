@@ -136,11 +136,11 @@ class MylesBot(object):
     def command_help(self, bot, update):
         messages = [
             "Available commands:",
-            "`/who` - Who is Myles?",
-            "`/where` - Where is Myles?",
-            "`/tweet` - What was the last tweet Myles sent?",
-            "`/photo` - What was the last Instagram photo Myles took?",
-            "`/web` - Where can I find Myles on the interwebs?"
+            "/who - Who is Myles?",
+            "/where - Where is Myles?",
+            "/tweet - What was the last tweet Myles sent?",
+            "/photo - What was the last Instagram photo Myles took?",
+            "/web - Where can I find Myles on the interwebs?"
         ]
 
         self.send_messages(bot, update, messages)
