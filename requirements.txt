@@ -2,7 +2,7 @@ blessings==1.6
 bpython==0.15
 certifi==2016.8.8
 curtsies==0.2.6
-foursquare==1!2015.5.26
+foursquare
 future==0.15.2
 greenlet==0.4.10
 humanize==0.5.1
