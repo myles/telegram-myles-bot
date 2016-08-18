@@ -114,12 +114,14 @@ class MylesBot(object):
             "*Blog*",
             "[mylesbraithwaite.org](https://mylesbraithwaite.org/"
             "?utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot) - "
-            "*Myles' Programming Laboratory*",
+            "*Myles' Lab* - Where Myles put some of my programming "
+            "experiments.",
             "[youaretheworst.today](https://youaretheworst.today/"
             "?utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot) - "
-            "*You Are the Worst Today* - A blog of things I find _the worst_.",
+            "*You Are the Worst Today* - A blog of things Myles find _the "
+            "worst_.",
             "[myles.red](https://myles.red/?utm_source=telegram&utm_medium=bot"
-            "&utm_campaign=MylesBot) - *MylesRED* - Sometimes I like to "
+            "&utm_campaign=MylesBot) - *MylesRED* - Sometimes Myles likes to "
             "publish mixtapes."
         ]
 
