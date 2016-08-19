@@ -3,6 +3,7 @@ import datetime
 import tweepy
 import humanize
 
+
 def get_last_tweet(config):
     auth = tweepy.OAuthHandler(config['consumer_key'],
                                config['consumer_secret'])
