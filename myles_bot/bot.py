@@ -1,3 +1,4 @@
+import re
 from StringIO import StringIO
 
 import requests
@@ -7,6 +8,9 @@ from telegram import ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 from myles_bot import ext
+
+web_slug_regex = re.compile('^/web (?P<slug>[-\w,\.]+)$')
+anlytics_code = "utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot"
 
 
 class MylesBot(object):
@@ -110,30 +114,35 @@ class MylesBot(object):
         self.send_message(bot, update, "Not implemented yet.")
 
     def command_web(self, bot, update):
-        messages = [
-            "Where you can find Myles on the Web:",
-            "[mylesb.ca](https://mylesb.ca/?utm_source=telegram&utm_medium=bot"
-            "&utm_campaign=MylesBot) - *Homepage*",
-            "[mylesbraithwaite.com](http://mylesbraithwaite.com/"
-            "?utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot) - "
-            "*Blog*",
-            "[mylesbraithwaite.org](https://mylesbraithwaite.org/"
-            "?utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot) - "
-            "*Myles' Lab* - Where Myles put some of my programming "
-            "experiments.",
-            "[youaretheworst.today](https://youaretheworst.today/"
-            "?utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot) - "
-            "*You Are the Worst Today* - A blog of things Myles find _the "
-            "worst_.",
-            "[myles.red](https://myles.red/?utm_source=telegram&utm_medium=bot"
-            "&utm_campaign=MylesBot) - *MylesRED* - Sometimes Myles likes to "
-            "publish mixtapes."
-        ]
+        bot.sendChatAction(update.message.chat_id, action="typing")
+
+        text = update.message.text
+        webs = config['websites']
+        messages = []
+
+        web_slug_match = web_slug_regex.match(text)
+
+        if web_slug_match:
+            slug = match.group('slug')
+            web = next((i for i in webs if i["slug"] == slug), None)
+
+            post = get_last_feed_post(web['feed_url'])
+
+            if web.get('description'):
+                messages.append("[{slug}]({url}) - *{name}* - "
+                                "{description}".format(**web))
+            else:
+                messages.append("[{slug}]({url}) - *{name}*".format(**web))
+
+            messages.append("*[{title}]({link})* published {ago}.")
+        else:
+            messages.append("Where you can find Myles on the Web:")
+
+            for web in webs:
+                web['url'] = web['url'] + anlytics_code
+                messages.append("[{slug}]({url}) - *{title}* - {description}")
 
         self.send_messages(bot, update, messages)
-
-    def command_feed(self, bot, update):
-        self.send_message(bot, update, "Not implemented yet.")
 
     def command_start(self, bot, update):
         msg = "Hi! I'm @MylesBot, a Telegram bot made by @MylesB about " \
@@ -148,7 +157,7 @@ class MylesBot(object):
             "/where - Where is Myles?",
             "/tweet - What was the last tweet Myles sent?",
             "/photo - What was the last Instagram photo Myles took?",
-            "/web - Where can I find Myles on the interwebs?"
+            "/web - Where can I find Myles on the interwebs?",
         ]
 
         self.send_messages(bot, update, messages)
