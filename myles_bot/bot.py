@@ -98,7 +98,7 @@ class MylesBot(object):
             self.send_photo_url(bot, update, url)
 
         messages = [
-            "```text\n{text}\n```",
+            u"{text}",
             "[@{user[screen_name]}](https://twitter.com/{user[screen_name]}) "
             "- {ago}"
         ]

@@ -28,6 +28,4 @@ def get_last_tweet(config):
             tweet['images'].append(media['media_url'])
             tweet['text'] = tweet['text'].replace(media['url'], '')
 
-    tweet['text'].encode("utf8")
-
     return tweet
