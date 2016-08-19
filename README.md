@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/myles/telegram-myles-bot/badges/gpa.svg)](https://codeclimate.com/github/myles/telegram-myles-bot)
+
 # [@MylesBot](https://telegram.me/MylesBot)
 
 A Telegram Bot I created about me.
