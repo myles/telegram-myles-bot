@@ -117,7 +117,7 @@ class MylesBot(object):
         bot.sendChatAction(update.message.chat_id, action="typing")
 
         text = update.message.text
-        webs = config['websites']
+        webs = self.config['websites']
         messages = []
 
         web_slug_match = web_slug_regex.match(text)
