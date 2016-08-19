@@ -73,6 +73,8 @@ class MylesBot(object):
         self.send_messages(bot, update, messages)
 
     def command_where(self, bot, update):
+        bot.sendChatAction(update.message.chat_id, action="typing")
+
         foursquare = ext.get_foursquare_location(self.config['foursquare'])
         venue = foursquare['venue']
         location = venue['location']
@@ -88,9 +90,11 @@ class MylesBot(object):
             self.send_location(bot, update, location['lat'], location['lng'])
 
     def command_tweet(self, bot, update):
+        bot.sendChatAction(update.message.chat_id, action="typing")
+
         tweet = ext.get_last_tweet(self.config['twitter'])
 
-        for url in tweet['images']:
+        for url in tweet.get('images', None):
             self.send_photo_url(bot, update, url)
 
         messages = [
