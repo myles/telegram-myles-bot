@@ -134,7 +134,7 @@ class MylesBot(object):
             else:
                 messages.append("[{slug}]({url}) - *{name}*".format(**web))
 
-            messages.append("*[{title}]({link})* published "
+            messages.append(u"*[{title}]({link})* published "
                             "{ago}.".format(**post))
         else:
             messages.append("Where you can find Myles on the Web:")
