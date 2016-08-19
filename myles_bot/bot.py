@@ -123,7 +123,7 @@ class MylesBot(object):
         web_slug_match = web_slug_regex.match(text)
 
         if web_slug_match:
-            slug = match.group('slug')
+            slug = web_slug_match.group('slug')
             web = next((i for i in webs if i["slug"] == slug), None)
 
             post = get_last_feed_post(web['feed_url'])
@@ -134,13 +134,14 @@ class MylesBot(object):
             else:
                 messages.append("[{slug}]({url}) - *{name}*".format(**web))
 
-            messages.append("*[{title}]({link})* published {ago}.")
+            messages.append("*[{title}]({link})* published "
+                            "{ago}.".format(**post))
         else:
             messages.append("Where you can find Myles on the Web:")
 
             for web in webs:
                 web['url'] = web['url'] + anlytics_code
-                messages.append("[{slug}]({url}) - *{title}* - "
+                messages.append("[{slug}]({url}) - *{name}* - "
                                 "{description}".format(**web))
 
         self.send_messages(bot, update, messages)
