@@ -1,5 +1,5 @@
-from time import mktime
 import datetime
+from time import mktime
 
 import humanize
 import feedparser
