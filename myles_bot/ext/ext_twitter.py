@@ -23,7 +23,7 @@ def get_last_tweet(config):
     for url in tweet['entities']['urls']:
         tweet['text'] = tweet['text'].replace(url['url'], url['expanded_url'])
 
-    for media in tweet['entities']['media']:
+    for media in tweet['entities'].get('media', []):
         if media['type'] == 'photo':
             tweet['images'].append(media['media_url'])
             tweet['text'] = tweet['text'].replace(media['url'], '')

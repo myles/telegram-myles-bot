@@ -94,7 +94,7 @@ class MylesBot(object):
 
         tweet = ext.get_last_tweet(self.config['twitter'])
 
-        for url in tweet.get('images', None):
+        for url in tweet.get('images', []):
             self.send_photo_url(bot, update, url)
 
         messages = [
