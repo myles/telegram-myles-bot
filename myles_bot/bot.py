@@ -127,6 +127,9 @@ class MylesBot(object):
 
         self.send_messages(bot, update, messages)
 
+    def command_feed(self, bot, update):
+        self.send_message(bot, update, "Not implemented yet.")
+
     def command_start(self, bot, update):
         msg = "Hi! I'm @MylesBot, a Telegram bot made by @MylesB about " \
               "@MylesB."
