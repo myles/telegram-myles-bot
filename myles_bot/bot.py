@@ -141,8 +141,12 @@ class MylesBot(object):
 
             for web in webs:
                 web['url'] = web['url'] + anlytics_code
-                messages.append("[{slug}]({url}) - *{name}* - "
-                                "{description}".format(**web))
+
+                if web.get('description'):
+                    messages.append("[{slug}]({url}) - *{name}* - "
+                                    "{description}".format(**web))
+                else:
+                    messages.append("[{slug}]({url}) - *{name}*".format(**web))
 
         self.send_messages(bot, update, messages)
 
