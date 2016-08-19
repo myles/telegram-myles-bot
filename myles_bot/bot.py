@@ -99,7 +99,8 @@ class MylesBot(object):
 
         messages = [
             "```text\n{text}\n```",
-            "[@{user[screen_name]}](https://twitter.com/{user[screen_name]}) - {ago}"
+            "[@{user[screen_name]}](https://twitter.com/{user[screen_name]}) "
+            "- {ago}"
         ]
 
         for msg in messages:
