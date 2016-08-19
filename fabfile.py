@@ -1,11 +1,13 @@
 import os.path
 
 from fabric import api
+from fabric.operations import put
 from fabric.utils import puts, abort
 from fabric.contrib.files import exists
 
 api.env.hosts = ['bear']
 api.env.use_ssh_config = True
+api.env.remote_interrupt = True
 
 api.env.supervisord_name = 'telegram-myles-bot'
 
@@ -22,6 +24,10 @@ api.env.venv_pip = os.path.join(api.env.venv_dir, 'bin/pip')
 api.env.repo = 'git://github.com/myles/telegram-myles-bot.git'
 api.env.remote = 'origin'
 api.env.branch = 'master'
+
+# Files
+api.env.bot_log = os.path.join(api.env.proj_dir, 'bot.log')
+api.env.config_json = os.path.join(api.env.proj_dir, 'config.json')
 
 
 @api.task
@@ -89,6 +95,19 @@ def supervisorctl_restart():
 
 
 @api.task
+@api.parallel
+def log():
+    assert(api.env.remote_interrupt == True)
+    with api.settings(warn_only=True):
+        api.run('tail -n 50 -f {0}'.format(api.env.bot_log))
+
+
+@api.task
+def copy_config():
+    put(local_path='config.json', remote_path=api.env.config_json)
+
+
+@api.task
 def ship_it():
     # Check to make sure that there isn't any unchecked files
     git_status = api.local('git status --porcelain', capture=True)
@@ -102,6 +121,7 @@ def ship_it():
     # The deploy tasks
     update_code()
     pip_upgrade()
+    copy_config()
     supervisorctl_restart()
 
     # Draw a ship
