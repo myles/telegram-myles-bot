@@ -126,7 +126,7 @@ class MylesBot(object):
             slug = web_slug_match.group('slug')
             web = next((i for i in webs if i["slug"] == slug), None)
 
-            post = get_last_feed_post(web['feed_url'])
+            post = ext.get_last_feed_post(web['feed_url'])
 
             if web.get('description'):
                 messages.append("[{slug}]({url}) - *{name}* - "
