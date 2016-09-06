@@ -193,7 +193,10 @@ class MylesBot(object):
                     Emoji.CAMERA]:
             self.command_photo(bot, update)
 
-        if text in ['web', 'website', 'websites', Emoji.EARTH_GLOBE_AMERICAS]:
+        if text in ['web', 'website', 'websites', Emoji.EARTH_GLOBE_AMERICAS,
+                    Emoji.EARTH_GLOBE_EUROPE_AFRICA,
+                    Emoji.GLOBE_WITH_MERIDIANS,
+                    Emoji.EARTH_GLOBE_ASIA_AUSTRALIA]:
             self.command_web(bot, update)
 
         if text in ['help']:
