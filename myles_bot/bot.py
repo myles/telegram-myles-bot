@@ -1,4 +1,5 @@
 import re
+import string
 from StringIO import StringIO
 
 import requests
