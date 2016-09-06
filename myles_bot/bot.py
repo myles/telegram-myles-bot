@@ -3,6 +3,7 @@ from StringIO import StringIO
 
 import requests
 
+from telegram.emoji import Emoji
 from telegram.parsemode import ParseMode
 from telegram import ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -169,19 +170,33 @@ class MylesBot(object):
         self.send_messages(bot, update, messages)
 
     def noncommand_text(self, bot, update):
-        text = update.message.text
+        # Get the message text and convert to lowercase
+        text = update.message.text.lower()
 
-        if text == 'Who is Myles?':
+        # Remove the punctutation
+        punctuation = set(string.punctuation)
+        text = ''.join(c for c in text if c not in punctuation)
+
+        if text in ['who', 'who is myles', Emoji.MAN]:
             self.command_who(bot, update)
 
-        if text == 'Where is Myles?':
+        if text in ['where', 'where is myles',
+                    Emoji.SMILING_FACE_WITH_SUNGLASSES]:
             self.command_where(bot, update)
 
-        if text == "What was Myles' last tweet?":
+        if text in ['tweet', 'twitter', 'what was myles last tweet',
+                    Emoji.BIRD]:
             self.command_tweet(bot, update)
 
-        if text == "What was Myles' last photo?":
+        if text in ['photo', 'instagram', 'what was myles last photo',
+                    Emoji.CAMERA]:
             self.command_photo(bot, update)
+
+        if text in ['web', 'website', 'websites', Emoji.EARTH_GLOBE_AMERICAS]:
+            self.command_web(bot, update)
+
+        if text in ['help']:
+            self.command_help(bot, update)
 
     def run(self):
         updater = Updater(self.telegram_api_key)
