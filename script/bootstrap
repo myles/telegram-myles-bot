@@ -1,0 +1,9 @@
+#!/bin/sh
+
+mkvirtualenv telegram-myles-bot
+
+pip install --upgrade --requirement requirements.txt
+
+printf 'Write a config.json like this:'
+
+printf '{\n\t"telegram": "TODO_TELEGRAM_API_KEY",\n\t"foursquare": {\n\t\t"client_id": "TODO_FOURSQUARE_CLIENT_ID",\n\t\t"client_secret": "TODO_FOURSQUARE_CLIENT_SECRET",\n\t\t"access_token": "TODO_FOURSQUARE_ACCESS_TOKEN"\n\t}\n}\n'

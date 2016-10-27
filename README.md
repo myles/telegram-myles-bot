@@ -54,7 +54,7 @@ Create the configuration file at `config.json` that looks like:
 
 ```
 {
-  "telegram": "TELEGRAM_API_KEY",
+  "telegram": "",
   "foursquare": {
     "client_id": "",
     "client_secret: "",
@@ -62,4 +62,3 @@ Create the configuration file at `config.json` that looks like:
   }
 }
 ```
-
