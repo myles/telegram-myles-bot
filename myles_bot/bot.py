@@ -19,6 +19,10 @@ anlytics_code = "utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot"
 class MylesBot(object):
 
     def __init__(self, config):
+        """
+        :param config: a dictionary configuration of the bot.
+        """
+
         self.config = config
 
         self.telegram_api_key = config['telegram']
@@ -30,6 +34,12 @@ class MylesBot(object):
 
     def send_message(self, bot, update, msg, disable_link_preview=True,
                      **kwargs):
+        """
+        Send a message.
+
+        :param msg: The message to send to the user.
+        """
+
         return bot.sendMessage(update.message.chat_id, msg,
                                reply_markup=ReplyKeyboardMarkup(self.keyboard),
                                resize_keyboard=True,
@@ -38,33 +48,67 @@ class MylesBot(object):
                                **kwargs)
 
     def send_messages(self, bot, update, messages):
+        """
+        Send multiple messages to the user.
+
+        :param messages: A list of messages to send to the user.
+        """
+
         for msg in messages:
             self.send_message(bot, update, msg)
 
-    def send_location(self, bot, update, latitude, longitude, **kwargs):
+    def send_location(self, bot, update, lat, lon, **kwargs):
+        """
+        Send a location to the user.
+
+        :param lat: The latitude to the location.
+        :param lon: The longitude to the location.
+        """
+
         reply_markup = ReplyKeyboardMarkup(self.keyboard)
-        return bot.sendLocation(update.message.chat_id, latitude, longitude,
+        return bot.sendLocation(update.message.chat_id, lat, lon,
                                 reply_markup=reply_markup,
                                 resize_keyboard=True,
                                 **kwargs)
 
-    def send_venue(self, bot, update, latitude, longitude, title, address,
-                   **kwargs):
-        return bot.sendVenue(update.message.chat_id, latitude, longitude,
-                             title, address, resize_keyboard=True,
+    def send_venue(self, bot, update, lat, lon, title, address, **kwargs):
+        """
+        Send a venue location to the user.
+
+        :param lat: The latitude to the venue's location.
+        :param lon: The longitude to the venue's location.
+        :param title: The title of the venue.
+        :param address: The address of the venue's location.
+        """
+
+        return bot.sendVenue(update.message.chat_id, lat, lon, title, address,
                              reply_markup=ReplyKeyboardMarkup(self.keyboard),
+                             resize_keyboard=True,
                              **kwargs)
 
     def send_photo(self, bot, update, photo, **kwargs):
-        bot.sendChatAction(update.message.chat_id, action="upload_photo")
+        """
+        Send a photo to the user.
 
+        :param photo: The StringIO of the photo.
+        """
+
+        bot.sendChatAction(update.message.chat_id, action="upload_photo")
         return bot.sendPhoto(update.message.chat_id, photo=photo, **kwargs)
 
     def send_photo_url(self, bot, update, url):
+        """
+        A function for sending a photo by URL.
+
+        :param url: The URL to the photograph.
+        """
+
         resp = requests.get(url)
         return self.send_photo(bot, update, StringIO(resp.content))
 
     def command_who(self, bot, update):
+        """When the command who runs."""
+
         messages = [
             'Myles Braithwaite lives in Toronto where he runs a small '
             'consluting company called [Monkey in your Soul]'
@@ -80,6 +124,8 @@ class MylesBot(object):
         self.send_messages(bot, update, messages)
 
     def command_where(self, bot, update):
+        """When the command where runs."""
+
         bot.sendChatAction(update.message.chat_id, action='typing')
 
         foursquare = ext.get_foursquare_location(self.config['foursquare'])
@@ -97,6 +143,8 @@ class MylesBot(object):
             self.send_location(bot, update, location['lat'], location['lng'])
 
     def command_tweet(self, bot, update):
+        """When the command tweet runs."""
+
         bot.sendChatAction(update.message.chat_id, action='typing')
 
         tweet = ext.get_last_tweet(self.config['twitter'])
@@ -114,9 +162,13 @@ class MylesBot(object):
             self.send_message(bot, update, msg.format(**tweet))
 
     def command_photo(self, bot, update):
+        """When the command photo runs."""
+
         self.send_message(bot, update, "Not implemented yet.")
 
     def command_web(self, bot, update):
+        """When the command web runs."""
+
         bot.sendChatAction(update.message.chat_id, action="typing")
 
         text = update.message.text
@@ -154,12 +206,16 @@ class MylesBot(object):
         self.send_messages(bot, update, messages)
 
     def command_start(self, bot, update):
+        """When the bot is started up and when the start command runs."""
+
         msg = ("Hi! I'm @MylesBot, a Telegram bot made by @MylesB about "
                "@MylesB.")
 
         self.send_message(bot, update, msg)
 
     def command_help(self, bot, update):
+        """When the command help runs."""
+
         messages = [
             'Available commands:',
             '/who - Who is Myles?',
@@ -172,6 +228,8 @@ class MylesBot(object):
         self.send_messages(bot, update, messages)
 
     def noncommand_text(self, bot, update):
+        """What happens when the user does a non-command text."""
+
         # Get the message text and convert to lowercase
         text = update.message.text.lower()
 
@@ -179,25 +237,33 @@ class MylesBot(object):
         punctuation = set(string.punctuation)
         text = ''.join(c for c in text if c not in punctuation)
 
+        # 'Who' Command
         if text in ['who', 'who is myles', u'👱']:
             self.command_who(bot, update)
 
+        # 'Where is Myles?' Command
         if text in ['where', 'where is myles', u'🕶', u'😎']:
             self.command_where(bot, update)
 
+        # "What was Myles' Last Tweet" Command
         if text in ['tweet', 'twitter', 'what was myles last tweet', u'🐦']:
             self.command_tweet(bot, update)
 
+        # "What was Myles' Last Photo" Command
         if text in ['photo', 'instagram', 'what was myles last photo', u'📷']:
             self.command_photo(bot, update)
 
+        # 'Web' Command
         if text in ['web', 'website', 'websites', u'🌏', u'🌍', u'🌎']:
             self.command_web(bot, update)
 
+        # 'Help' Command
         if text in ['help']:
             self.command_help(bot, update)
 
     def run(self):
+        """Runs the Telegram Bot."""
+
         updater = Updater(self.telegram_api_key)
 
         dp = updater.dispatcher
