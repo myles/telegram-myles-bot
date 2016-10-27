@@ -1,10 +1,11 @@
+# coding=utf-8
+
 import re
 import string
 from StringIO import StringIO
 
 import requests
 
-from telegram.emoji import Emoji
 from telegram.parsemode import ParseMode
 from telegram import ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -65,27 +66,27 @@ class MylesBot(object):
 
     def command_who(self, bot, update):
         messages = [
-            "Myles Braithwaite lives in Toronto where he runs a small "
-            "consluting company called [Monkey in your Soul]"
-            "(https://monkeyinyoursoul.com/) (you should hire him because "
+            'Myles Braithwaite lives in Toronto where he runs a small '
+            'consluting company called [Monkey in your Soul]'
+            '(https://monkeyinyoursoul.com/) (you should hire him because '
             "he's awesome).",
-            "You should follow him on [Twitter](https://twitter.com/mylesb) "
-            "or [Instagram](https://instagram.com/myles).",
-            "You can find his programming stuff on [GitHub]"
-            "(https://github.com/myles) or [CodePen]"
-            "(http://codepen.io/mylesb/)."
+            'You should follow him on [Twitter](https://twitter.com/mylesb) '
+            'or [Instagram](https://instagram.com/myles).',
+            'You can find his programming stuff on [GitHub]'
+            '(https://github.com/myles) or [CodePen]'
+            '(http://codepen.io/mylesb/).'
         ]
 
         self.send_messages(bot, update, messages)
 
     def command_where(self, bot, update):
-        bot.sendChatAction(update.message.chat_id, action="typing")
+        bot.sendChatAction(update.message.chat_id, action='typing')
 
         foursquare = ext.get_foursquare_location(self.config['foursquare'])
         venue = foursquare['venue']
         location = venue['location']
 
-        msg = "Myles Braithwaite checked in to *{venue[name]}* {ago}."
+        msg = 'Myles Braithwaite checked in to *{venue[name]}* {ago}.'
         self.send_message(bot, update, msg.format(**foursquare))
 
         if location.get('address', None):
@@ -96,7 +97,7 @@ class MylesBot(object):
             self.send_location(bot, update, location['lat'], location['lng'])
 
     def command_tweet(self, bot, update):
-        bot.sendChatAction(update.message.chat_id, action="typing")
+        bot.sendChatAction(update.message.chat_id, action='typing')
 
         tweet = ext.get_last_tweet(self.config['twitter'])
 
@@ -104,9 +105,9 @@ class MylesBot(object):
             self.send_photo_url(bot, update, url)
 
         messages = [
-            u"{text}",
-            "[@{user[screen_name]}](https://twitter.com/{user[screen_name]}) "
-            "- {ago}"
+            u'{text}',
+            '[@{user[screen_name]}](https://twitter.com/{user[screen_name]}) '
+            '- {ago}'
         ]
 
         for msg in messages:
@@ -153,19 +154,19 @@ class MylesBot(object):
         self.send_messages(bot, update, messages)
 
     def command_start(self, bot, update):
-        msg = "Hi! I'm @MylesBot, a Telegram bot made by @MylesB about " \
-              "@MylesB."
+        msg = ("Hi! I'm @MylesBot, a Telegram bot made by @MylesB about "
+               "@MylesB.")
 
         self.send_message(bot, update, msg)
 
     def command_help(self, bot, update):
         messages = [
-            "Available commands:",
-            "/who - Who is Myles?",
-            "/where - Where is Myles?",
-            "/tweet - What was the last tweet Myles sent?",
-            "/photo - What was the last Instagram photo Myles took?",
-            "/web - Where can I find Myles on the interwebs?",
+            'Available commands:',
+            '/who - Who is Myles?',
+            '/where - Where is Myles?',
+            '/tweet - What was the last tweet Myles sent?',
+            '/photo - What was the last Instagram photo Myles took?',
+            '/web - Where can I find Myles on the interwebs?',
         ]
 
         self.send_messages(bot, update, messages)
@@ -178,25 +179,19 @@ class MylesBot(object):
         punctuation = set(string.punctuation)
         text = ''.join(c for c in text if c not in punctuation)
 
-        if text in ['who', 'who is myles', Emoji.MAN]:
+        if text in ['who', 'who is myles', u'👱']:
             self.command_who(bot, update)
 
-        if text in ['where', 'where is myles',
-                    Emoji.SMILING_FACE_WITH_SUNGLASSES]:
+        if text in ['where', 'where is myles', u'🕶', u'😎']:
             self.command_where(bot, update)
 
-        if text in ['tweet', 'twitter', 'what was myles last tweet',
-                    Emoji.BIRD]:
+        if text in ['tweet', 'twitter', 'what was myles last tweet', u'🐦']:
             self.command_tweet(bot, update)
 
-        if text in ['photo', 'instagram', 'what was myles last photo',
-                    Emoji.CAMERA]:
+        if text in ['photo', 'instagram', 'what was myles last photo', u'📷']:
             self.command_photo(bot, update)
 
-        if text in ['web', 'website', 'websites', Emoji.EARTH_GLOBE_AMERICAS,
-                    Emoji.EARTH_GLOBE_EUROPE_AFRICA,
-                    Emoji.GLOBE_WITH_MERIDIANS,
-                    Emoji.EARTH_GLOBE_ASIA_AUSTRALIA]:
+        if text in ['web', 'website', 'websites', u'🌏', u'🌍', u'🌎']:
             self.command_web(bot, update)
 
         if text in ['help']:
