@@ -6,11 +6,11 @@ from StringIO import StringIO
 
 import requests
 
+from telegram import KeyboardButton, ReplyKeyboardMarkup
+from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 from telegram.parsemode import ParseMode
-from telegram import ReplyKeyboardMarkup, KeyboardButton
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-from myles_bot import ext
+from . import ext
 
 web_slug_regex = re.compile('^/web (?P<slug>[-\w,\.]+)$')
 anlytics_code = "utm_source=telegram&utm_medium=bot&utm_campaign=MylesBot"
