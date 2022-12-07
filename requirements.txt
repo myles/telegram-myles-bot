@@ -1,6 +1,6 @@
 blessings==1.6
 bpython==0.15
-certifi==2016.8.8
+certifi==2022.12.7
 curtsies==0.2.6
 feedparser==5.2.1
 foursquare
